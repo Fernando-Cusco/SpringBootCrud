@@ -31,6 +31,8 @@
 					<th>Descripcion</th>
 					<th>Fecha</th>
 					<th>Total</th>
+					<th>Detalles</th>
+					<th>Eliminar</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -39,6 +41,8 @@
 						<td th:text="${factura.descripcion}"></td>
 						<td th:text="${factura.createAt}"></td>
 						<td th:text="${factura.calcularTotal}"></td>
+						<td><a class="btn btn-warning btn-xs mx-1" th:href="@{'/factura/ver/' + ${factura.id}}">Detalles</a></td>
+						<td><a class="btn btn-danger btn-xs mx-1" th:href="@{'/factura/eliminar/' + ${factura.id}}" onclick="return confirm('Esta seguro que desea eliminar la factura?');">Eliminar</a></td>
 					</tr>
 				</tbody>
 			</table>

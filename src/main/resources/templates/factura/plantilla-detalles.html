@@ -3,15 +3,18 @@
 <body>
 	
 	<table class="d-none" th:fragment="detallesFactura">
-		<tbody id="plantillaDetallesFactura"></tbody>
-		<tr id="row_{ID}">
-			<td class="d-none">
-				<input type="hidden" value="{ID}" name="detalle_id[]"/>
-			</td>
-			<td>{NOMBRE}</td>
-			<td>{PRECIO}</td>
-			
-		</tr>
+		<tbody id="plantillaDetallesFactura">
+			<tr id="row_{ID}">
+				<td class="d-none">
+					<input type="hidden" value="{ID}" name="detalle_id[]"/>
+				</td>
+				<td>{NOMBRE}</td>
+				<td>{PRECIO}</td>
+				<td><input type="number" value="1" name="cantidad[]" id="cantidad_{ID}" class="form-control col-sm-4" onchange="detallesHelper.calcularSubTotal({ID}, {PRECIO}, this.value)"/></td>
+				<th><span id="total_factura_{ID}">0</span></th>
+				<td><a href="#" class="btn btn-danger btn-xs" onclick="detallesHelper.eliminarDetalle({ID});">X</a></td>
+			</tr>
+		</tbody>
 	</table>
 
 </body>

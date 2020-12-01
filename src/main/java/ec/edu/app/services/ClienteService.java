@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ec.edu.app.dao.IClienteDao;
+import ec.edu.app.dao.IFacturaDao;
 import ec.edu.app.dao.IProductoDao;
 import ec.edu.app.models.Cliente;
+import ec.edu.app.models.Factura;
 import ec.edu.app.models.Producto;
 
 @Service
@@ -22,15 +24,8 @@ public class ClienteService implements IClienteService{
 	@Autowired
 	private IProductoDao productoDao;
 	
-	
-	public List<Producto> findByNombreLikeIgnoreCase(String term) {
-		return productoDao.findByNombreLikeIgnoreCase("%"+term+"%");
-	}
-	
-	@Transactional(readOnly = true)
-	public List<Producto> findByNombre(String term) {
-		return productoDao.findByNombre(term);
-	}
+	@Autowired
+	private IFacturaDao facturaDao;
 	
 	@Transactional(readOnly = true)
 	public List<Cliente> listarClientes() {
@@ -61,5 +56,36 @@ public class ClienteService implements IClienteService{
 		return clienteDao.findAll(pageable);
 	}
 
+	//Facturas
+	
+	public List<Producto> findByNombreLikeIgnoreCase(String term) {
+		return productoDao.findByNombreLikeIgnoreCase("%"+term+"%");
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Producto> findByNombre(String term) {
+		return productoDao.findByNombre(term);
+	}
+	
+	@Transactional(readOnly = false)
+	public void saveFactura(Factura factura) {
+		facturaDao.save(factura);
+	}
+	
+	@Transactional(readOnly = true)
+	public Producto findProductoById(Long id) {
+		return productoDao.findById(id).orElse(null);
+	}
+	
+	@Transactional(readOnly = true)
+	public Factura findFacturaById(Long id) {
+		return facturaDao.findById(id).orElse(null);
+	}
+	
+	@Transactional(readOnly = false)
+	public void deleteFactura(Long id) {
+		facturaDao.deleteById(id);
+	}
+	
 	
 }

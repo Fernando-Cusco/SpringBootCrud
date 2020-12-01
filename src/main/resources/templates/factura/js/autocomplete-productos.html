@@ -3,7 +3,6 @@
 <body>
 
 	<script type="text/javascript" th:fragment="javascript">
-		console.log("Aquiii");
 		$(document).ready(function(){
 			$("#buscar_producto").autocomplete({
 				source: function(request, response) {
@@ -25,18 +24,73 @@
 					});
 				},
 				select: function(event, ui) {
+					
+					if(detallesHelper.hasProducto(ui.item.value)) {
+						detallesHelper.incrementaCantidad(ui.item.value, ui.item.precio);
+						
+						return false;
+					}
 					var detalle = $("#plantillaDetallesFactura").html();
 					detalle = detalle.replace(/{ID}/g, ui.item.value);
 					detalle = detalle.replace(/{NOMBRE}/g, ui.item.label);
 					detalle = detalle.replace(/{PRECIO}/g, ui.item.precio);
 					
 					$("#cargarDetalleProductos tbody").append(detalle);
+					detallesHelper.calcularSubTotal(ui.item.value, ui.item.precio, 1);
+					detallesHelper.calcularTotal();
 					return false;
 				}
 			});
+			$("form").submit(function(){
+				$("#plantillaDetallesFactura").remove();
+				return;
+			});
 		});
+		
+		var detallesHelper = {
+			calcularSubTotal: function(id, precio, cantidad) {
+				$("#total_factura_"+id).html(parseInt(precio) * parseInt(cantidad));
+				this.calcularTotal();
+			},
+			
+			hasProducto: function(id) {
+				var resultado = false;
+				$('input[name="detalle_id[]"]').each(function() {
+					if(parseInt(id) == parseInt($(this).val())) {
+						resultado = true;
+					}
+				});
+				return resultado;
+			},
+			incrementaCantidad: function(id, precio) {
+				var cantidad = $("#cantidad_"+id).val() ? parseInt($("#cantidad_"+id).val()) : 0;
+				$("#cantidad_"+id).val(++cantidad);
+				this.calcularSubTotal(id, precio, cantidad);
+				this.calcularTotal();
+				
+			},
+			eliminarDetalle: function(id) {
+				$("#row_"+id).remove();
+				this.calcularTotal();
+			},
+			calcularTotal: function() {
+				
+				var total = 0;
+				$('span[id^="total_factura_"]').each(function(){
+					total += parseInt($(this).html());
+					console.log("Total", total);
+				});
+				$("#total").html(total);
+			}
+		}
+			
 	
 	</script>
 
 </body>
 </html>
+
+
+
+
+
