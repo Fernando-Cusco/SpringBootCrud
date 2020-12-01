@@ -17,6 +17,7 @@ public class LoginController {
             flash.addFlashAttribute("info", "Ya haz iniciado sesión.");
             return "redirect:/";
         }
+        model.addAttribute("titulo", "Inicio de Sesión");
         return "login";
     }
 
