@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	
+	<table class="d-none" th:fragment="detallesFactura">
+		<tbody id="plantillaDetallesFactura"></tbody>
+		<tr id="row_{ID}">
+			<td class="d-none">
+				<input type="hidden" value="{ID}" name="detalle_id[]"/>
+			</td>
+			<td>{NOMBRE}</td>
+			<td>{PRECIO}</td>
+			
+		</tr>
+	</table>
+
+</body>
+</html>

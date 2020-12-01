@@ -25,6 +25,7 @@
 							<th>CreateAt</th>
 							<th>Editar</th>
 							<th>Eliminar</th>
+							<th>Crear Factura</th>
 					</thead>
 					<tbody>
 						<tr th:each="cliente: ${clientes}">
@@ -38,6 +39,9 @@
 							</td>
 							<td>
 								<a class="btn btn-danger btn-xs" th:href="@{/eliminar/}+ ${cliente.id}" onclick="return confirm('Seguro eliminar registro');">Eliminar</a>
+							</td>
+							<td>
+								<a class=" mx-3 btn btn-warning btn-xs" th:href="@{/factura/form/}+ ${cliente.id}">Crear</a>
 							</td>
 						</tr>
 					</tbody>

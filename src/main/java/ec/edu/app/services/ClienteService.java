@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ec.edu.app.dao.IClienteDao;
+import ec.edu.app.dao.IProductoDao;
 import ec.edu.app.models.Cliente;
+import ec.edu.app.models.Producto;
 
 @Service
 public class ClienteService implements IClienteService{
@@ -17,16 +19,26 @@ public class ClienteService implements IClienteService{
 	@Autowired
 	private IClienteDao clienteDao;
 	
+	@Autowired
+	private IProductoDao productoDao;
+	
+	
+	public List<Producto> findByNombreLikeIgnoreCase(String term) {
+		return productoDao.findByNombreLikeIgnoreCase("%"+term+"%");
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Producto> findByNombre(String term) {
+		return productoDao.findByNombre(term);
+	}
 	
 	@Transactional(readOnly = true)
 	public List<Cliente> listarClientes() {
-		// TODO Auto-generated method stub
 		return (List<Cliente>) clienteDao.findAll();
 	}
 
 	@Transactional(readOnly = false)
 	public void nuevoCliente(Cliente cliente) {
-		// TODO Auto-generated method stub
 		clienteDao.save(cliente);
 		
 	}

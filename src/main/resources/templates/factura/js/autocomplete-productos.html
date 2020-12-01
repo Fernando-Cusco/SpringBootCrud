@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<script type="text/javascript" th:fragment="javascript">
+		console.log("Aquiii");
+		$(document).ready(function(){
+			$("#buscar_producto").autocomplete({
+				source: function(request, response) {
+					$.ajax({
+						url: "/factura/cargar-productos/" + request.term,
+						dataType: "json",
+						data: {
+							term: request.term
+						},
+						success: function(data) {
+							response($.map(data, function(item){
+								return {
+									value: item.id,
+									label: item.nombre,
+									precio: item.precio
+								};
+							}));	
+						},
+					});
+				},
+				select: function(event, ui) {
+					var detalle = $("#plantillaDetallesFactura").html();
+					detalle = detalle.replace(/{ID}/g, ui.item.value);
+					detalle = detalle.replace(/{NOMBRE}/g, ui.item.label);
+					detalle = detalle.replace(/{PRECIO}/g, ui.item.precio);
+					
+					$("#cargarDetalleProductos tbody").append(detalle);
+					return false;
+				}
+			});
+		});
+	
+	</script>
+
+</body>
+</html>

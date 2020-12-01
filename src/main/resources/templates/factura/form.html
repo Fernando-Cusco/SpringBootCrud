@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+
+	<header th:replace="layout/layout :: header"> </header>
+	<div class="container py-4">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}">
+			</div>
+			<div class="card-body">
+			
+				<h4 class="card-title">
+					<a class="btn btn-danger btn-xs" th:href="@{/ver/}+ ''+${factura.cliente.id}" th:text="'&laquo; volver'"></a>
+				</h4>
+				<form th:action="@{/factura/form/}" th:object="${factura}" method="post">
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Cliente</label>
+						<div class="col-sm-6">
+							<label class="form-control" th:text="${factura.cliente.nombres} +' '+ ${factura.cliente.apellidos}"></label>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Descripción</label>
+						<div class="col-sm-6">
+							<input class="form-control" type="text" th:field="*{descripcion}"/>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Obervaciones</label>
+						<div class="col-sm-6">
+							<textarea class="form-control" th:field="*{observacion}" rows="5" cols="4"></textarea>
+						</div>
+					</div>
+					
+					
+					
+					<div class="form-group row">
+						<label for="buscar_producto" class="col-sm-2 col-form-label">Buscar Producto</label>
+						<div class="col-sm-6">
+							<input class="form-control" type="text" name="buscar_producto" id="buscar_producto"/>
+						</div>
+					</div>
+					<table th:replace="factura/plantilla-detalles :: detallesFactura"></table>
+					<table class="table table-sm table-striped table-hover" id="cargarDetalleProductos">
+						<thead>
+							<tr>
+								<th>Nombre</th>
+								<th>Precio</th>
+								<th>Cantidad</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input class="btn btn-warning my-4" type="submit" th:value="${titulo}"/>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+	<script th:replace="factura/js/autocomplete-productos :: javascript"></script>
+	
+	
+</body>
+</html>

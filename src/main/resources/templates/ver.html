@@ -12,6 +12,9 @@
 		<div class="card-header" th:text="${titulo}">
 		</div>
 		<div class="card-body">
+			<h4 class="card-title">
+				<a class="btn btn-warning btn-xs" th:href="@{/factura/form/}+ ${cliente.id}">Crear Factura</a>
+			</h4>
 			<img th:if="${#strings.length(cliente.foto) > 0}" class="img-thumbnail rounded float-left" style="max-height: 100px" th:src="@{'/uploads/' + ${cliente.foto}}" th:alt="${cliente.foto}"/>
 			<ul class="list-group">
 				<li class="list-group-item" th:text="${cliente.nombres}"></li>
