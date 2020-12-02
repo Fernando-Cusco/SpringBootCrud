@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/layout :: head">
 
 </head>
@@ -13,7 +13,7 @@
 		</div>
 		<div class="card-body">
 			<h4 class="card-title">
-				<a class="btn btn-warning btn-xs" th:href="@{/factura/form/}+ ${cliente.id}">Crear Factura</a>
+				<a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-warning btn-xs" th:href="@{/factura/form/}+ ${cliente.id}">Crear Factura</a>
 			</h4>
 			<img th:if="${#strings.length(cliente.foto) > 0}" class="img-thumbnail rounded float-left" style="max-height: 100px" th:src="@{'/uploads/' + ${cliente.foto}}" th:alt="${cliente.foto}"/>
 			<ul class="list-group">
@@ -31,8 +31,8 @@
 					<th>Descripcion</th>
 					<th>Fecha</th>
 					<th>Total</th>
-					<th>Detalles</th>
-					<th>Eliminar</th>
+					<th sec:authorize="hasRole('ROLE_ADMIN')">Detalles</th>
+					<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -41,8 +41,8 @@
 						<td th:text="${factura.descripcion}"></td>
 						<td th:text="${factura.createAt}"></td>
 						<td th:text="${factura.calcularTotal}"></td>
-						<td><a class="btn btn-warning btn-xs mx-1" th:href="@{'/factura/ver/' + ${factura.id}}">Detalles</a></td>
-						<td><a class="btn btn-danger btn-xs mx-1" th:href="@{'/factura/eliminar/' + ${factura.id}}" onclick="return confirm('Esta seguro que desea eliminar la factura?');">Eliminar</a></td>
+						<td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-warning btn-xs mx-1" th:href="@{'/factura/ver/' + ${factura.id}}">Detalles</a></td>
+						<td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-danger btn-xs mx-1" th:href="@{'/factura/eliminar/' + ${factura.id}}" onclick="return confirm('Esta seguro que desea eliminar la factura?');">Eliminar</a></td>
 					</tr>
 				</tbody>
 			</table>
