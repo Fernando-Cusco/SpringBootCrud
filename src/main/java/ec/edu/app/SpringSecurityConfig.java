@@ -1,7 +1,9 @@
 package ec.edu.app;
 
 import ec.edu.app.auth.filter.JWTAuthentificationFilter;
+import ec.edu.app.auth.filter.JWTAuthorizationFilter;
 import ec.edu.app.auth.handler.LoginSucessHandler;
+import ec.edu.app.auth.service.JWTService;
 import ec.edu.app.services.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +31,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private JpaUserDetailsService userDetailsService;
 
     @Autowired
+    private JWTService jwtService;
+
+    @Autowired
     public void configurerGlobal(AuthenticationManagerBuilder builder) throws Exception {
 
         builder.userDetailsService(userDetailsService)
@@ -52,7 +57,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and().logout().permitAll()
 //                .and().exceptionHandling().accessDeniedPage("/error_403")
                 .and()
-                .addFilter(new JWTAuthentificationFilter(authenticationManager()))
+                .addFilter(new JWTAuthentificationFilter(authenticationManager(), jwtService))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtService))
                 .csrf().disable() //quitar esto en caso de usar sessiones
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); //quitar esto en caso de usar sessiones
     }
