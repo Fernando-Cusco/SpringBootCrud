@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.UUID;
 
 
@@ -23,6 +24,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -91,6 +96,11 @@ public class ClienteController {
 						  Authentication authentication) {
 		if(authentication != null) {
 			logger.info("Hola el usuario, "+authentication.getName()+" estas autentificado.");
+		}
+		if(tieneRol("ROLE_ADMIN")) {
+			logger.info("Hola, "+authentication.getName()+" tienes acceso");
+		} else {
+			logger.info("Hola, no tienes acceso");
 		}
 		Pageable pageable = PageRequest.of(page, 4);
 		Page<Cliente> clientes = clienteService.findAll(pageable);
@@ -209,5 +219,25 @@ public class ClienteController {
 		}
 		return "redirect:/listar";
 	}
-	
+
+	private boolean tieneRol(String role) {
+		SecurityContext context = SecurityContextHolder.getContext();
+		if(context == null) {
+			return false;
+		}
+		Authentication authentication = context.getAuthentication();
+		if(authentication == null) {
+			return false;
+		}
+
+		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+		return authorities.contains(new SimpleGrantedAuthority(role));
+//		for(GrantedAuthority authority: authorities) {
+//			if(role.equals(authority.getAuthority())) {
+//				logger.info("Hola, "+authentication.getName()+" tu rol es: "+authority.getAuthority());
+//				return true;
+//			}
+//		}
+//		return false;
+	}
 }
