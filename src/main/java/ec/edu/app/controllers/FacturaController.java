@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,7 @@ import ec.edu.app.models.Factura;
 import ec.edu.app.models.Producto;
 import ec.edu.app.services.IClienteService;
 
+@Secured("ROLE_ADMIN")
 @Controller
 @RequestMapping(value = "/factura")
 @SessionAttributes("factura")
@@ -37,8 +39,8 @@ public class FacturaController {
 	
 	@Autowired
 	private IClienteService clienteService;
-	
-	
+
+
 	@GetMapping(value = "/ver/{id}")
 	public String ver(@PathVariable Long id, Model model, RedirectAttributes flash) {
 		Factura factura = clienteService.findFacturaById(id);

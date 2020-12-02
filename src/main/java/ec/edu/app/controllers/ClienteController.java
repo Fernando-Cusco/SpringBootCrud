@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
@@ -23,11 +24,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -59,7 +62,7 @@ public class ClienteController {
 	
 	private final static String UPLOADS = "uploads";
 	
-	
+	@Secured("ROLE_USER")
 	@GetMapping(value = "/uploads/{filename:.+}")
 	public ResponseEntity<Resource> verFoto(@PathVariable String filename) {
 		Path pathFoto = Paths.get("uploads").resolve(filename).toAbsolutePath();
@@ -78,7 +81,8 @@ public class ClienteController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment: filename=\""+recurso.getFilename()+"\"")
 				.body(recurso);
 	}
-	
+
+	@Secured("ROLE_USER")
 	@GetMapping(value = "/ver/{id}")
 	public String verImagen(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
 		Cliente cliente = clienteService.buscarCliente(id);
@@ -93,7 +97,7 @@ public class ClienteController {
 	
 	@GetMapping(value = {"listar", "/"})
 	 public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
-						  Authentication authentication) {
+						  Authentication authentication, HttpServletRequest request) {
 		if(authentication != null) {
 			logger.info("Hola el usuario, "+authentication.getName()+" estas autentificado.");
 		}
@@ -102,6 +106,22 @@ public class ClienteController {
 		} else {
 			logger.info("Hola, no tienes acceso");
 		}
+
+		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "ROLE_");
+		if(securityContext.isUserInRole("ADMIN")) {
+			logger.info("Forma usando SecurityContextHolderAwareRequestWrapper, "+authentication.getName()+" tienes acceso");
+		} else {
+			logger.info("Forma usando SecurityContextHolderAwareRequestWrapper, no tienes acceso");
+		}
+
+		if(request.isUserInRole("ROL_ADMIN")) {
+			logger.info("Forma usando SecurityContextHolderAwareRequestWrapper, "+authentication.getName()+" tienes acceso");
+		} else {
+			logger.info("Forma usando SecurityContextHolderAwareRequestWrapper, no tienes acceso");
+		}
+
+
+
 		Pageable pageable = PageRequest.of(page, 4);
 		Page<Cliente> clientes = clienteService.findAll(pageable);
 		
@@ -113,7 +133,8 @@ public class ClienteController {
 		return "listar";
 	 }
 	
-	
+
+	 @Secured("ROLE_ADMIN")
 	@GetMapping(value = "form")
 	public String nuevoClienteView(Model model) {
 		Cliente cliente = new Cliente();
@@ -122,7 +143,7 @@ public class ClienteController {
 		model.addAttribute("titulo", "Nuevo Cliente");
 		return "form";
 	}
-	
+	@Secured("ROLE_ADMIN")
 	@PostMapping(value = "form")
 	public String nuevoCliente(@Valid Cliente cliente, BindingResult result, Model model, @RequestParam("file") MultipartFile foto ,RedirectAttributes flash, SessionStatus status) {
 		if(result.hasErrors()) {
@@ -202,7 +223,8 @@ public class ClienteController {
 		
 		return "form";
 	}
-	
+
+	@Secured("ROLE_ADMIN")
 	@GetMapping(value = "eliminar/{id}")
 	public String eliminarCliente(@PathVariable("id") Long id, Model model, RedirectAttributes flash) {
 		if(id > 0) {
