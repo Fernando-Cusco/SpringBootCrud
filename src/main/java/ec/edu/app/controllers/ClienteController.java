@@ -134,7 +134,7 @@ public class ClienteController {
 	 }
 	
 
-	 @Secured("ROLE_ADMIN")
+	 @Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@GetMapping(value = "form")
 	public String nuevoClienteView(Model model) {
 		Cliente cliente = new Cliente();

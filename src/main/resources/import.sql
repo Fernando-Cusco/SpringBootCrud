@@ -42,6 +42,12 @@ INSERT INTO detalles_factura (cantidad, factura_id, producto_id) VALUES (8, 2, 5
 
 
 
+insert into users(username, password, enable) values ('fernando', '$2a$10$HXM0fFcKNo4vh72LA.QHC.lknuGMTrzkYDH90aOG6ikqeRyvjDuse', 1);
+insert into users(username, password, enable) values ('admin', '$2a$10$c1HYDyrWk72YpC.JUYQqle0o5EFdt2avXbBbcKIaApgcmI7a5Ewta', 1);
+
+insert into authorities (user_id, authority) values (1, 'ROLE_USER');
+insert into authorities (user_id, authority) values (2, 'ROLE_USER');
+insert into authorities (user_id, authority) values (2, 'ROLE_ADMIN');
 
 
 
