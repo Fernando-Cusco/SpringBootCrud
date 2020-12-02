@@ -1,5 +1,6 @@
 package ec.edu.app;
 
+import ec.edu.app.auth.handler.LoginSucessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private LoginSucessHandler sucessHandler;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -40,7 +44,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/eliminar/**").hasAnyRole("ADMIN")
                 .antMatchers("/factura/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()
-                .and().formLogin().loginPage("/login")
+                .and().formLogin().successHandler(sucessHandler)
+                .loginPage("/login")
                 .permitAll()
                 .and().logout().permitAll()
                 .and().exceptionHandling().accessDeniedPage("/error_403");
