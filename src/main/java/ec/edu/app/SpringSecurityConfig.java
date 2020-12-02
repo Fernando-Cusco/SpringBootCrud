@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.sql.DataSource;
@@ -37,7 +38,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     //Proteger rutas con ACL, de acceso a ciertos usuarios
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/image/**", "/listar").permitAll()
+        http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/image/**", "/listar", "/api/**").permitAll()
 //                .antMatchers("/ver/**").hasAnyRole("USER")
 //                .antMatchers("/uploads/**").hasAnyRole("USER")
 //                .antMatchers("/form/**").hasAnyRole("ADMIN")
@@ -48,7 +49,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .permitAll()
                 .and().logout().permitAll()
-                .and().exceptionHandling().accessDeniedPage("/error_403");
+                .and().exceptionHandling().accessDeniedPage("/error_403")
+                .and().csrf().disable() //quitar esto en caso de usar sessiones
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); //quitar esto en caso de usar sessiones
     }
 }
 

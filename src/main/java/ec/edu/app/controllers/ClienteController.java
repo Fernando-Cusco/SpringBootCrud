@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -34,11 +35,7 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -94,7 +91,13 @@ public class ClienteController {
 		model.addAttribute("cliente", cliente);
 		return "ver";
 	}
-	
+
+	@GetMapping(value = "/api/listar")
+	@ResponseBody
+	public List<Cliente> listarRest() {
+		return clienteService.listarClientes();
+	}
+
 	@GetMapping(value = {"listar", "/"})
 	 public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
 						  Authentication authentication, HttpServletRequest request) {
