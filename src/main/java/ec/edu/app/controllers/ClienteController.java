@@ -92,11 +92,11 @@ public class ClienteController {
 		return "ver";
 	}
 
-	@GetMapping(value = "/api/listar")
-	@ResponseBody
-	public List<Cliente> listarRest() {
-		return clienteService.listarClientes();
-	}
+//	@GetMapping(value = "/api/listar")
+//	@ResponseBody
+//	public List<Cliente> listarRest() {
+//		return clienteService.listarClientes();
+//	}
 
 	@GetMapping(value = {"listar", "/"})
 	 public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
